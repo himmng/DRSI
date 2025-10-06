@@ -1,18 +1,20 @@
 {
   "employees": {
-    "employee_id": ["not_null", "unique"],
-    "first_name": ["not_null"],
-    "last_name": ["not_null"],
-    "email": ["not_null", "regex"],
-    "salary": ["range"],
-    "department_id": ["not_null"]
+    "Name": ["not_null"],
+    "Gender": ["not_null"],
+    "Age":["ranges"],
+    "City": ["not_null"],
+    "Department": ["not_null"],
+    "Salary": ["ranges"],
+    "Email": ["not_null", "regex"]
   },
   "rules_config": {
     "regex_patterns": {
-      "email": "[^@]+@[^@]+\\.[^@]+"
+      "Email": "[^@]+@[^@]+\\.[^@]+"
     },
     "ranges": {
-      "salary": [20000, 400000]
+      "Age": [14, 100],
+      "Salary": [20000, 400000]
     }
   }
 }

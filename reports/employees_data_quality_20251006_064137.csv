@@ -1,0 +1,7 @@
+Column,Check,Failed_Count
+Name,not_null,5
+Gender,not_null,3
+City,not_null,4
+Department,not_null,2
+Email,not_null,3
+Email,regex,4
