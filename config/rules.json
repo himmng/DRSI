@@ -1,0 +1,18 @@
+{
+  "employees": {
+    "employee_id": ["not_null", "unique"],
+    "first_name": ["not_null"],
+    "last_name": ["not_null"],
+    "email": ["not_null", "regex"],
+    "salary": ["range"],
+    "department_id": ["not_null"]
+  },
+  "rules_config": {
+    "regex_patterns": {
+      "email": "[^@]+@[^@]+\\.[^@]+"
+    },
+    "ranges": {
+      "salary": [20000, 400000]
+    }
+  }
+}

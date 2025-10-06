@@ -1,0 +1,9 @@
+Column,Check,Failed_Count
+employee_id,not_null,0
+employee_id,unique,2
+first_name,not_null,0
+last_name,not_null,0
+email,not_null,1
+email,regex,0
+salary,range,0
+department_id,not_null,0
