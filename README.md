@@ -1,5 +1,5 @@
 # Data Readiness RSI module 
-This module aims to acceralate the end-to-end data integration tasks for the target system with the help of recurssively self-improving (RSI) AI agents. The module consists of four agents that will perform various data readiness tasks for a given source data system.
+This module aims to acceralate the end-to-end data integration tasks for the target system with the help of recurssively self-improving (RSI) AI agents. The module consists of agents that will perform various data readiness tasks for a given source data system.
 
 #### 1- Data Quality Agent
 -   Tasks: Completeness, Uniqueness, Accuracy, Validity, Consistency, Timeliness
