@@ -1,18 +1,18 @@
 # Data Readiness RSI module 
 This module aims to acceralate the end-to-end data integration tasks for the target system with the help of recurssively self-improving (RSI) AI agents. The module consists of four agents that will perform various data readiness tasks for a given source data system.
-## 1- Data Quality Agent
-### Tasks: Completeness, Uniqueness, Accuracy, Validity, Consistency, Timeliness
-## 2- Data Transformation Agent
-### Tasks: Enriching, Normalising, Joining, Aggeregating, Filtering, Cleaning
-## 3- Data Conversion Agent
-### Tasks: Assess, Format, Mapping, Load Test, Testing, Validating
-## 4- Data Preparation Agent
-### Tasks: Reports, Uploads
+
+#### 1- Data Quality Agent
+-   Tasks: Completeness, Uniqueness, Accuracy, Validity, Consistency, Timeliness
+#### 2- Data Transformation Agent
+-   Tasks: Enriching, Normalising, Joining, Aggeregating, Filtering, Cleaning
+#### 3- Data Conversion Agent
+-   Tasks: Assess, Format, Mapping, Load Test, Testing, Validating
+#### 4- Data Preparation Agent
+-   Tasks: Reports, Uploads
 
 ---
----
 
-### Download Repo:
+#### Download Repo:
 
 - Setting Up:
 
@@ -23,7 +23,7 @@ This module aims to acceralate the end-to-end data integration tasks for the tar
         ```
         #python 
 
-        from DQI import config
+        from DQI.src import config
         
         path = "path_to_dataset"
         config = config(path=path)
@@ -78,8 +78,8 @@ This module aims to acceralate the end-to-end data integration tasks for the tar
         -   generate individual reports:
 
             ```
-            from DQI.validate import validate
-            from DQI import config
+            from DQI.src import validate
+            from DQI.src import config
             
             path = "path_to_dataset"
             config = config(path=path)
