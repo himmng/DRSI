@@ -2,77 +2,99 @@ import os
 import json
 import pandas as pd
 
-path = os.path.abspath(os.path.join(__file__, os.pardir))
+class Config:
+    def __init__(self, config_path=None, data_path=None, path='default'):
+        """
+        Initialise config and data directories.
+        Automatically sets paths one level above current file if 'default' is used.
+        """
+        if path == 'default':
+            base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            self.data_path = data_path or os.path.join(base_path, 'data')
+            self.config_path = config_path or os.path.join(base_path, 'config')
+        else:
+            self.data_path = data_path
+            self.config_path = config_path
 
-def read_file(file_path):
-    """
-    Reads a file (CSV, TXT, Excel, Parquet) and returns a DataFrame.
-    Tries to infer delimiter and handles common file types used in industry.
-    """
-    ext = os.path.splitext(file_path)[1].lower()
+        os.makedirs(self.config_path, exist_ok=True)
 
-    if ext == ".csv":
-        return pd.read_csv(file_path, nrows=5)
-    elif ext == ".txt":
-        # Try common delimiters like tab or pipe
+    def read_file(self, file_path):
+        """
+        Reads a supported file and returns a small sample DataFrame.
+        Handles CSV, TXT, Excel, Parquet, and JSON formats.
+        """
+        ext = os.path.splitext(file_path)[1].lower()
+
         try:
-            return pd.read_csv(file_path, sep="\t", nrows=5)
-        except Exception:
-            return pd.read_csv(file_path, sep="|", nrows=5)
-    elif ext in [".xls", ".xlsx"]:
-        return pd.read_excel(file_path, nrows=5)
-    elif ext == ".parquet":
-        return pd.read_parquet(file_path)
-    elif ext == ".json":
-        # Load JSON-based table-style data if it’s a records format
-        df = pd.read_json(file_path)
-        if isinstance(df, dict):
-            df = pd.json_normalize(df)
-        return df.head()
-    else:
-        raise ValueError(f"Unsupported file type: {ext}")
+            if ext == ".csv":
+                return pd.read_csv(file_path, nrows=5)
+            elif ext == ".txt":
+                try:
+                    return pd.read_csv(file_path, sep="\t", nrows=5)
+                except Exception:
+                    return pd.read_csv(file_path, sep="|", nrows=5)
+            elif ext in [".xls", ".xlsx"]:
+                return pd.read_excel(file_path, nrows=5)
+            elif ext == ".parquet":
+                return pd.read_parquet(file_path).head()
+            elif ext == ".json":
+                df = pd.read_json(file_path)
+                if isinstance(df, dict):
+                    df = pd.json_normalize(df)
+                return df.head()
+            else:
+                raise ValueError(f"Unsupported file type: {ext}")
+        except Exception as e:
+            raise ValueError(f"Error reading {file_path}: {e}")
 
+    def get_config(self, rules='default'):
+        """
+        Loops through all supported files inside data_dir,
+        extracts their headers, and generates JSON config templates
+        for each file inside config_dir.
+        """
+        supported_extensions = [".csv", ".txt", ".xls", ".xlsx", ".parquet", ".json"]
 
-def get_config(data_dir="data", config_dir="config"):
-    """
-    Scans all supported files inside data_dir, extracts their headers,
-    and generates JSON config templates for each file inside config_dir.
-    """
-    os.makedirs(config_dir, exist_ok=True)
+        # Loop through every file in the data directory
+        for filename in os.listdir(self.data_path):
+            file_path = os.path.join(self.data_path, filename)
+            ext = os.path.splitext(filename)[1].lower()
 
-    supported_extensions = [".csv", ".txt", ".xls", ".xlsx", ".parquet", ".json"]
-
-    for filename in os.listdir(data_dir):
-        ext = os.path.splitext(filename)[1].lower()
-
-        if ext in supported_extensions:
-            dataset_name = filename.replace(ext, "")
-            file_path = os.path.join(data_dir, filename)
-            
-            try:
-                df = read_file(file_path)
-            except Exception as e:
-                print(f"Skipping {filename}: {e}")
+            if ext not in supported_extensions:
+                print(f"Skipping unsupported file type: {filename}")
                 continue
 
-            # Generate a default config skeleton
+            try:
+                df = self.read_file(file_path)
+            except Exception as e:
+                print(f"Skipping {filename} due to read error: {e}")
+                continue
+
+            dataset_name = os.path.splitext(filename)[0]
+
+            # Default rule config: every column must be not_null
             dataset_rules = {col: ["not_null"] for col in df.columns}
 
+            # Define a generic config structure
             config = {
-                dataset_name: dataset_rules,
+                "dataset_name": dataset_name,
+                "columns": dataset_rules,
                 "rules_config": {
-                    "regex_patterns": {},
-                    "ranges": {},
+                    "regex_patterns": {
+                        "email": "[^@]+@[^@]+\\.[^@]+"
+                    },
+                    "ranges": {
+                        "age": [18, 100],
+                        "salary": [20000, 500000]
+                    },
                     "allowed_values": {},
                     "date_format": "%Y-%m-%d"
                 }
             }
 
-            config_path = os.path.join(config_dir, f"{dataset_name}_config.json")
-            with open(config_path, "w") as f:
+            # Save each config file inside /config/
+            config_file = os.path.join(self.config_path, f"{dataset_name}_config.json")
+            with open(config_file, "w") as f:
                 json.dump(config, f, indent=2)
 
-            print(f"Config generated for: {dataset_name} → {config_path}")
-
-if __name__ == "__main__":
-    get_config()
+            print(f"Config generated for: {dataset_name} → {config_file}")

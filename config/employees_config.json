@@ -1,0 +1,43 @@
+{
+  "dataset_name": "employees",
+  "columns": {
+    "Name": [
+      "not_null"
+    ],
+    "Gender": [
+      "not_null"
+    ],
+    "Age": [
+      "not_null"
+    ],
+    "City": [
+      "not_null"
+    ],
+    "Department": [
+      "not_null"
+    ],
+    "Salary": [
+      "not_null"
+    ],
+    "Email": [
+      "not_null"
+    ]
+  },
+  "rules_config": {
+    "regex_patterns": {
+      "email": "[^@]+@[^@]+\\.[^@]+"
+    },
+    "ranges": {
+      "age": [
+        18,
+        100
+      ],
+      "salary": [
+        20000,
+        500000
+      ]
+    },
+    "allowed_values": {},
+    "date_format": "%Y-%m-%d"
+  }
+}

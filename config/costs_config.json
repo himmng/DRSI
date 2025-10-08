@@ -1,0 +1,43 @@
+{
+  "dataset_name": "costs",
+  "columns": {
+    "PROD_ID": [
+      "not_null"
+    ],
+    "CUST_ID": [
+      "not_null"
+    ],
+    "TIME_ID": [
+      "not_null"
+    ],
+    "CHANNEL_ID": [
+      "not_null"
+    ],
+    "PROMO_ID": [
+      "not_null"
+    ],
+    "QUANTITY_SOLD": [
+      "not_null"
+    ],
+    "AMOUNT_SOLD": [
+      "not_null"
+    ]
+  },
+  "rules_config": {
+    "regex_patterns": {
+      "email": "[^@]+@[^@]+\\.[^@]+"
+    },
+    "ranges": {
+      "age": [
+        18,
+        100
+      ],
+      "salary": [
+        20000,
+        500000
+      ]
+    },
+    "allowed_values": {},
+    "date_format": "%Y-%m-%d"
+  }
+}

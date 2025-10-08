@@ -23,10 +23,11 @@ This module aims to acceralate the end-to-end data integration tasks for the tar
         ```
         #python 
 
-        from DQI.src import config
+        from DQRI.DQA import config
         
-        path = "path_to_dataset"
-        config = config(path=path)
+        data_path = "path_to_dataset"
+        config_path = "path_to_save_config_files"
+        config = config(path='default', data_path=None, config_path=None) # by default
         config.get_config(rules='default')
         ```
 
