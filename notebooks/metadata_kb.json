@@ -1,0 +1,50 @@
+{
+    "Emp_ID": {
+        "semantic_type": "identifier",
+        "possible_meaning": "Employee Identifier",
+        "expected_format": "integer",
+        "potential_issues": "Duplicates or missing values"
+    },
+    " Name": {
+        "semantic_type": "string",
+        "possible_meaning": "First names of individuals",
+        "expected_format": "text",
+        "potential_issues": "Leading spaces, inconsistent casing, duplicate names"
+    },
+    "Gender": {
+        "semantic_type": "categorical",
+        "possible_meaning": "Biological sex of an individual",
+        "expected_format": "string",
+        "potential_issues": "Binary classification limit, requires inclusivity for non-binary genders"
+    },
+    "Age": {
+        "semantic_type": null,
+        "possible_meaning": null,
+        "expected_format": null,
+        "potential_issues": null
+    },
+    "City": {
+        "semantic_type": "location",
+        "possible_meaning": "Names of cities in Pakistan",
+        "expected_format": "string",
+        "potential_issues": "Case sensitivity, inconsistent spelling, or missing values"
+    },
+    "Department": {
+        "semantic_type": null,
+        "possible_meaning": null,
+        "expected_format": null,
+        "potential_issues": null
+    },
+    "Salary": {
+        "semantic_type": null,
+        "possible_meaning": null,
+        "expected_format": null,
+        "potential_issues": null
+    },
+    "Email": {
+        "semantic_type": "email_address",
+        "possible_meaning": "User's contact email",
+        "expected_format": "string",
+        "potential_issues": "Invalid email format or duplicates"
+    }
+}
