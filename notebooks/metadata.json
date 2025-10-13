@@ -11,9 +11,9 @@
             5
         ],
         "semantic_type": "identifier",
-        "possible_meaning": "Employee Identifier",
+        "possible_meaning": "Employee identification number",
         "expected_format": "integer",
-        "potential_issues": "Duplicates or missing values"
+        "potential_issues": "Duplicate values or non-numeric entries"
     },
     " Name": {
         "dtype": "object",
@@ -27,9 +27,9 @@
             " Ayesha"
         ],
         "semantic_type": "string",
-        "possible_meaning": "First names of individuals",
-        "expected_format": "text",
-        "potential_issues": "Leading spaces, inconsistent casing, duplicate names"
+        "possible_meaning": "Person's first name",
+        "expected_format": "non-empty string",
+        "potential_issues": "Leading spaces, case sensitivity or non-unique values"
     },
     "Gender": {
         "dtype": "object",
@@ -40,9 +40,9 @@
             "Female"
         ],
         "semantic_type": "categorical",
-        "possible_meaning": "Biological sex of an individual",
+        "possible_meaning": "Biological sex or gender identity of an individual",
         "expected_format": "string",
-        "potential_issues": "Binary classification limit, requires inclusivity for non-binary genders"
+        "potential_issues": "Non-binary or other gender identities not represented"
     },
     "Age": {
         "dtype": "float64",
@@ -55,10 +55,10 @@
             21.0,
             40.0
         ],
-        "semantic_type": null,
-        "possible_meaning": null,
-        "expected_format": null,
-        "potential_issues": null
+        "semantic_type": "numerical",
+        "possible_meaning": "Age of individuals",
+        "expected_format": "float or integer",
+        "potential_issues": "Missing values, unrealistic values (e.g., negative or excessively high values)"
     },
     "City": {
         "dtype": "object",
@@ -71,10 +71,10 @@
             "lahore",
             "Peshawar"
         ],
-        "semantic_type": "location",
+        "semantic_type": "geographic_location",
         "possible_meaning": "Names of cities in Pakistan",
         "expected_format": "string",
-        "potential_issues": "Case sensitivity, inconsistent spelling, or missing values"
+        "potential_issues": "Case sensitivity and spelling variations"
     },
     "Department": {
         "dtype": "object",
@@ -87,10 +87,10 @@
             "Finance",
             "IT"
         ],
-        "semantic_type": null,
-        "possible_meaning": null,
-        "expected_format": null,
-        "potential_issues": null
+        "semantic_type": "categorical",
+        "possible_meaning": "Employee department classification",
+        "expected_format": "string",
+        "potential_issues": "Inconsistencies in formatting (e.g., extra spaces), typos, or unexpected values"
     },
     "Salary": {
         "dtype": "float64",
@@ -103,10 +103,10 @@
             123880.8,
             50115.7
         ],
-        "semantic_type": null,
-        "possible_meaning": null,
-        "expected_format": null,
-        "potential_issues": null
+        "semantic_type": "currency",
+        "possible_meaning": "Employee annual salary",
+        "expected_format": "float",
+        "potential_issues": "Outliers, missing values, or data entry errors"
     },
     "Email": {
         "dtype": "object",
@@ -119,9 +119,9 @@
             "sana72@gmail.com",
             "ayesha25@gmail.com"
         ],
-        "semantic_type": "email_address",
-        "possible_meaning": "User's contact email",
-        "expected_format": "string",
-        "potential_issues": "Invalid email format or duplicates"
+        "semantic_type": "email",
+        "possible_meaning": "User contact information",
+        "expected_format": "string in 'username@domain.com' format",
+        "potential_issues": "Invalid email format or duplicate entries"
     }
 }
