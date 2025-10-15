@@ -10,10 +10,10 @@
             4,
             5
         ],
-        "semantic_type": "email",
-        "possible_meaning": "Contact information",
-        "expected_format": "string",
-        "potential_issues": "Invalid email addresses or missing domain"
+        "semantic_type": "identifier",
+        "possible_meaning": "Employee ID",
+        "expected_format": "integer",
+        "potential_issues": "Duplicate values or missing values"
     },
     " Name": {
         "dtype": "object",
@@ -26,10 +26,10 @@
             " Sana",
             " Ayesha"
         ],
-        "semantic_type": "date",
-        "possible_meaning": "Transaction date",
-        "expected_format": "YYYY-MM-DD",
-        "potential_issues": "Invalid date formats or future dates"
+        "semantic_type": "string",
+        "possible_meaning": "Person's first name",
+        "expected_format": "capitalized words",
+        "potential_issues": "Leading or trailing spaces; inconsistent capitalization"
     },
     "Gender": {
         "dtype": "object",
@@ -39,10 +39,10 @@
             "Male",
             "Female"
         ],
-        "semantic_type": "timestamp",
-        "possible_meaning": "Recorded event time",
-        "expected_format": "ISO 8601",
-        "potential_issues": "Time zone discrepancies or invalid dates"
+        "semantic_type": "categorical",
+        "possible_meaning": "Represents the gender of an individual",
+        "expected_format": "string",
+        "potential_issues": "Non-binary values, inconsistent casing, or null entries"
     },
     "Age": {
         "dtype": "float64",
@@ -55,10 +55,10 @@
             21.0,
             40.0
         ],
-        "semantic_type": "date",
-        "possible_meaning": "Transaction date",
-        "expected_format": "YYYY-MM-DD",
-        "potential_issues": "Incorrect format or invalid dates"
+        "semantic_type": "numerical",
+        "possible_meaning": "Age of individuals in years",
+        "expected_format": "float",
+        "potential_issues": "Non-integer values, missing values, or negative numbers"
     },
     "City": {
         "dtype": "object",
@@ -71,10 +71,10 @@
             "lahore",
             "Peshawar"
         ],
-        "semantic_type": "temperature",
-        "possible_meaning": "Ambient air temperature",
-        "expected_format": "float or integer with units (e.g., Celsius or Fahrenheit)",
-        "potential_issues": "Inconsistent units, out-of-range values, or sensor errors"
+        "semantic_type": "city_name",
+        "possible_meaning": "List of cities within a country",
+        "expected_format": "string",
+        "potential_issues": "Case sensitivity and inconsistent capitalization"
     },
     "Department": {
         "dtype": "object",
@@ -87,10 +87,10 @@
             "Finance",
             "IT"
         ],
-        "semantic_type": "email_address",
-        "possible_meaning": "User's contact email",
-        "expected_format": "string matching a valid email pattern",
-        "potential_issues": "Invalid email format or missing domain"
+        "semantic_type": "categorical",
+        "possible_meaning": "Organizational department",
+        "expected_format": "string",
+        "potential_issues": "Leading or trailing spaces, inconsistent casing of department names"
     },
     "Salary": {
         "dtype": "float64",
@@ -103,10 +103,10 @@
             123880.8,
             50115.7
         ],
-        "semantic_type": "date",
-        "possible_meaning": "Record creation date",
-        "expected_format": "YYYY-MM-DD",
-        "potential_issues": "Incorrect format or leap year discrepancies"
+        "semantic_type": "currency",
+        "possible_meaning": "Employee annual salary",
+        "expected_format": "float",
+        "potential_issues": "Variability in salary ranges, missing values or negative numbers"
     },
     "Email": {
         "dtype": "object",
@@ -119,9 +119,9 @@
             "sana72@gmail.com",
             "ayesha25@gmail.com"
         ],
-        "semantic_type": "email address",
-        "possible_meaning": "User's contact information",
-        "expected_format": "string",
-        "potential_issues": "Invalid email format or unverified addresses"
+        "semantic_type": "email",
+        "possible_meaning": "User contact information",
+        "expected_format": "string in the format 'local-part@domain.com'",
+        "potential_issues": "Invalid email format, missing domain, or use of non-standard characters"
     }
 }

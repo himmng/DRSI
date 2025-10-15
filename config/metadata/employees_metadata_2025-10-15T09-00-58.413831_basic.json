@@ -1,0 +1,50 @@
+{
+    "Emp_ID": {
+        "semantic_type": "identifier",
+        "possible_meaning": "Employee ID",
+        "expected_format": "integer",
+        "potential_issues": "Duplicate values or missing values"
+    },
+    " Name": {
+        "semantic_type": "string",
+        "possible_meaning": "Person's first name",
+        "expected_format": "capitalized words",
+        "potential_issues": "Leading or trailing spaces; inconsistent capitalization"
+    },
+    "Gender": {
+        "semantic_type": "categorical",
+        "possible_meaning": "Represents the gender of an individual",
+        "expected_format": "string",
+        "potential_issues": "Non-binary values, inconsistent casing, or null entries"
+    },
+    "Age": {
+        "semantic_type": "numerical",
+        "possible_meaning": "Age of individuals in years",
+        "expected_format": "float",
+        "potential_issues": "Non-integer values, missing values, or negative numbers"
+    },
+    "City": {
+        "semantic_type": "city_name",
+        "possible_meaning": "List of cities within a country",
+        "expected_format": "string",
+        "potential_issues": "Case sensitivity and inconsistent capitalization"
+    },
+    "Department": {
+        "semantic_type": "categorical",
+        "possible_meaning": "Organizational department",
+        "expected_format": "string",
+        "potential_issues": "Leading or trailing spaces, inconsistent casing of department names"
+    },
+    "Salary": {
+        "semantic_type": "currency",
+        "possible_meaning": "Employee annual salary",
+        "expected_format": "float",
+        "potential_issues": "Variability in salary ranges, missing values or negative numbers"
+    },
+    "Email": {
+        "semantic_type": "email",
+        "possible_meaning": "User contact information",
+        "expected_format": "string in the format 'local-part@domain.com'",
+        "potential_issues": "Invalid email format, missing domain, or use of non-standard characters"
+    }
+}

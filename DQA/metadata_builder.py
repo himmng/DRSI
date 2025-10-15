@@ -4,39 +4,44 @@ import requests
 import os
 import re
 import time
+from datetime import datetime
 
 class RSIMetadataBuilder:
-    def __init__(self, api_key, model_name="openai/gpt-4o", kb_path="metadata_kb.json", max_retries=3, retry_delay=2):
+    def __init__(self, file_name, api_key, meta_path, model_name="openai/gpt-4o", max_retries=3, retry_delay=2):
         """
         Parameters
         ----------
+        file_name : str
+            name of the data file (without extension) to build metadata for
         api_key : str
-            API key
+            LLM API key
         model_name : str
             Model to use (e.g., "openai/gpt-4o")
-        kb_path : str
+        meta_path : str
             Path to knowledge base file (RSI memory)
         max_retries : int
             Number of retries for API call failures
         retry_delay : int
             Seconds to wait between retries
         """
+        self.timestamp = datetime.now().isoformat().replace(":", "-")
         self.api_key = api_key
         self.model_name = model_name
-        self.kb_path = kb_path
+        self.meta_path = meta_path
+        self.meta_file_path = meta_path + f"{file_name}_metadata_{self.timestamp}"
         self.max_retries = max_retries
         self.retry_delay = retry_delay
         self.kb = self._load_kb()
     
     # ------------------ KB Management ------------------ #
     def _load_kb(self):
-        if os.path.exists(self.kb_path):
-            with open(self.kb_path, "r") as f:
+        if os.path.exists(self.meta_file_path):
+            with open(self.meta_file_path, "r") as f:
                 return json.load(f)
         return {}
 
     def _save_kb(self):
-        with open(self.kb_path, "w") as f:
+        with open(self.meta_file_path + "_basic.json", "w") as f:
             json.dump(self.kb, f, indent=4)
     
     # ------------------ First Order Metadata ------------------ #
@@ -106,21 +111,22 @@ class RSIMetadataBuilder:
 
             # Structured JSON prompt
             prompt = f"""
-            infer the following as a valid JSON object **only** (no extra text):
+You are a data expert. Given the column name '{col}' and sample values {info['sample_values']}, 
+infer the following as a valid JSON object **only** (no extra text):
 
-            - semantic_type
-            - possible_meaning
-            - expected_format
-            - potential_issues
+- semantic_type
+- possible_meaning
+- expected_format
+- potential_issues
 
-            Example output:
-            {{ 
-            "semantic_type": "currency",
-            "possible_meaning": "Total transaction amount",
-            "expected_format": "float",
-            "potential_issues": "Missing values or negative numbers"
-            }}
-            """
+Example output:
+{{ 
+  "semantic_type": "currency",
+  "possible_meaning": "Total transaction amount",
+  "expected_format": "float",
+  "potential_issues": "Missing values or negative numbers"
+}}
+"""
             ai_text = self._call_openrouter(prompt)
             enrichment = self.parse_json_safe(ai_text)
 
@@ -150,7 +156,7 @@ class RSIMetadataBuilder:
         print(f"[Feedback Updated] KB updated for '{column_name}'.")
 
     # ------------------ Save Metadata ------------------ #
-    def save_metadata(self, metadata, file_path="metadata.json"):
-        with open(file_path, "w") as f:
+    def save_metadata(self, metadata):
+        with open(self.meta_file_path + ".json", "w") as f:
             json.dump(metadata, f, indent=4)
-        print(f"Metadata saved to {file_path}")
+        print(f"Metadata .json files saved! at {self.meta_path}")
