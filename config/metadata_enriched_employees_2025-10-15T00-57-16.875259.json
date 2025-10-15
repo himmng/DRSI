@@ -1,0 +1,127 @@
+{
+    "Emp_ID": {
+        "dtype": "int64",
+        "missing_percent": 0.0,
+        "unique_values": 32,
+        "sample_values": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "semantic_type": "datetime",
+        "possible_meaning": "Timestamp of the event",
+        "expected_format": "ISO 8601 string",
+        "potential_issues": "Incorrect timezone or malformed dates"
+    },
+    " Name": {
+        "dtype": "object",
+        "missing_percent": 0.0,
+        "unique_values": 10,
+        "sample_values": [
+            " Tariq",
+            " Hina",
+            " Usman",
+            " Sana",
+            " Ayesha"
+        ],
+        "semantic_type": "timestamp",
+        "possible_meaning": "Record creation time",
+        "expected_format": "ISO 8601",
+        "potential_issues": "Incorrect time zone or format deviations"
+    },
+    "Gender": {
+        "dtype": "object",
+        "missing_percent": 0.0,
+        "unique_values": 2,
+        "sample_values": [
+            "Male",
+            "Female"
+        ],
+        "semantic_type": "date",
+        "possible_meaning": "Event start date",
+        "expected_format": "YYYY-MM-DD",
+        "potential_issues": "Incorrect date format or invalid date values"
+    },
+    "Age": {
+        "dtype": "float64",
+        "missing_percent": 56.25,
+        "unique_values": 14,
+        "sample_values": [
+            47.0,
+            26.0,
+            36.0,
+            21.0,
+            40.0
+        ],
+        "semantic_type": "email",
+        "possible_meaning": "User's contact information",
+        "expected_format": "string",
+        "potential_issues": "Invalid format or missing '@' symbol"
+    },
+    "City": {
+        "dtype": "object",
+        "missing_percent": 0.0,
+        "unique_values": 7,
+        "sample_values": [
+            "Karachi",
+            "Quetta",
+            "Lahore",
+            "lahore",
+            "Peshawar"
+        ],
+        "semantic_type": "date",
+        "possible_meaning": "Event occurrence day",
+        "expected_format": "YYYY-MM-DD",
+        "potential_issues": "Incorrect format or invalid dates"
+    },
+    "Department": {
+        "dtype": "object",
+        "missing_percent": 0.0,
+        "unique_values": 8,
+        "sample_values": [
+            " Sales ",
+            "HR",
+            "Sales",
+            "Finance",
+            "IT"
+        ],
+        "semantic_type": "date",
+        "possible_meaning": "Date of transaction",
+        "expected_format": "YYYY-MM-DD",
+        "potential_issues": "Incorrect date format or invalid dates"
+    },
+    "Salary": {
+        "dtype": "float64",
+        "missing_percent": 50.0,
+        "unique_values": 16,
+        "sample_values": [
+            123609.72,
+            125683.94,
+            147901.41,
+            123880.8,
+            50115.7
+        ],
+        "semantic_type": "email",
+        "possible_meaning": "User contact information",
+        "expected_format": "string containing '@' and domain",
+        "potential_issues": "Invalid formats, missing '@', or missing domain"
+    },
+    "Email": {
+        "dtype": "object",
+        "missing_percent": 0.0,
+        "unique_values": 32,
+        "sample_values": [
+            "tariq76@gmail.com",
+            "hina90@gmail.com",
+            "usman71@gmail.com",
+            "sana72@gmail.com",
+            "ayesha25@gmail.com"
+        ],
+        "semantic_type": "currency",
+        "possible_meaning": "Total transaction amount",
+        "expected_format": "float",
+        "potential_issues": "Missing values or negative numbers"
+    }
+}

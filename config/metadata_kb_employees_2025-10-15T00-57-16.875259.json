@@ -1,0 +1,50 @@
+{
+    "Emp_ID": {
+        "semantic_type": "datetime",
+        "possible_meaning": "Timestamp of the event",
+        "expected_format": "ISO 8601 string",
+        "potential_issues": "Incorrect timezone or malformed dates"
+    },
+    " Name": {
+        "semantic_type": "timestamp",
+        "possible_meaning": "Record creation time",
+        "expected_format": "ISO 8601",
+        "potential_issues": "Incorrect time zone or format deviations"
+    },
+    "Gender": {
+        "semantic_type": "date",
+        "possible_meaning": "Event start date",
+        "expected_format": "YYYY-MM-DD",
+        "potential_issues": "Incorrect date format or invalid date values"
+    },
+    "Age": {
+        "semantic_type": "email",
+        "possible_meaning": "User's contact information",
+        "expected_format": "string",
+        "potential_issues": "Invalid format or missing '@' symbol"
+    },
+    "City": {
+        "semantic_type": "date",
+        "possible_meaning": "Event occurrence day",
+        "expected_format": "YYYY-MM-DD",
+        "potential_issues": "Incorrect format or invalid dates"
+    },
+    "Department": {
+        "semantic_type": "date",
+        "possible_meaning": "Date of transaction",
+        "expected_format": "YYYY-MM-DD",
+        "potential_issues": "Incorrect date format or invalid dates"
+    },
+    "Salary": {
+        "semantic_type": "email",
+        "possible_meaning": "User contact information",
+        "expected_format": "string containing '@' and domain",
+        "potential_issues": "Invalid formats, missing '@', or missing domain"
+    },
+    "Email": {
+        "semantic_type": "currency",
+        "possible_meaning": "Total transaction amount",
+        "expected_format": "float",
+        "potential_issues": "Missing values or negative numbers"
+    }
+}

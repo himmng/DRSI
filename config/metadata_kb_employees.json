@@ -1,0 +1,50 @@
+{
+    "Emp_ID": {
+        "semantic_type": "email",
+        "possible_meaning": "Contact information",
+        "expected_format": "string",
+        "potential_issues": "Invalid email addresses or missing domain"
+    },
+    " Name": {
+        "semantic_type": "date",
+        "possible_meaning": "Transaction date",
+        "expected_format": "YYYY-MM-DD",
+        "potential_issues": "Invalid date formats or future dates"
+    },
+    "Gender": {
+        "semantic_type": "timestamp",
+        "possible_meaning": "Recorded event time",
+        "expected_format": "ISO 8601",
+        "potential_issues": "Time zone discrepancies or invalid dates"
+    },
+    "Age": {
+        "semantic_type": "date",
+        "possible_meaning": "Transaction date",
+        "expected_format": "YYYY-MM-DD",
+        "potential_issues": "Incorrect format or invalid dates"
+    },
+    "City": {
+        "semantic_type": "temperature",
+        "possible_meaning": "Ambient air temperature",
+        "expected_format": "float or integer with units (e.g., Celsius or Fahrenheit)",
+        "potential_issues": "Inconsistent units, out-of-range values, or sensor errors"
+    },
+    "Department": {
+        "semantic_type": "email_address",
+        "possible_meaning": "User's contact email",
+        "expected_format": "string matching a valid email pattern",
+        "potential_issues": "Invalid email format or missing domain"
+    },
+    "Salary": {
+        "semantic_type": "date",
+        "possible_meaning": "Record creation date",
+        "expected_format": "YYYY-MM-DD",
+        "potential_issues": "Incorrect format or leap year discrepancies"
+    },
+    "Email": {
+        "semantic_type": "email address",
+        "possible_meaning": "User's contact information",
+        "expected_format": "string",
+        "potential_issues": "Invalid email format or unverified addresses"
+    }
+}

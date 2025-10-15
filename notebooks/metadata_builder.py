@@ -1,127 +1,156 @@
 import pandas as pd
 import json
+import requests
 import os
-import uuid
-from datetime import datetime
-import numpy as np
+import re
+import time
 
-class MetadataBuilder:
-    """
-    MetadataBuilder automatically generates and enhances metadata for datasets.
-    """
-
-    def __init__(self, source_path: str, save_dir: str = "./metadata"):
-        self.source_path = source_path
-        self.save_dir = save_dir
-        self.dataset_name = os.path.splitext(os.path.basename(source_path))[0]
-        self.df = None
-        self.metadata = {}
-        os.makedirs(save_dir, exist_ok=True)
-
-    # -------------------------------------------------------------------------
-    # (1) Function: Read data and build first-order metadata
-    # -------------------------------------------------------------------------
-    def build_first_order_metadata(self):
+class RSIMetadataBuilder:
+    def __init__(self, api_key, model_name="openai/gpt-4o", kb_path="metadata_kb.json", max_retries=3, retry_delay=2):
         """
-        Reads the dataset and generates base metadata such as:
-        - inferred schema (data types)
-        - shape
-        - null statistics
-        - sample records
+        Parameters
+        ----------
+        api_key : str
+            API key
+        model_name : str
+            Model to use (e.g., "openai/gpt-4o")
+        kb_path : str
+            Path to knowledge base file (RSI memory)
+        max_retries : int
+            Number of retries for API call failures
+        retry_delay : int
+            Seconds to wait between retries
         """
-        print(f"🔍 Reading dataset: {self.source_path}")
-        self.df = pd.read_csv(self.source_path)
+        self.api_key = api_key
+        self.model_name = model_name
+        self.kb_path = kb_path
+        self.max_retries = max_retries
+        self.retry_delay = retry_delay
+        self.kb = self._load_kb()
+    
+    # ------------------ KB Management ------------------ #
+    def _load_kb(self):
+        if os.path.exists(self.kb_path):
+            with open(self.kb_path, "r") as f:
+                return json.load(f)
+        return {}
 
-        inferred_schema = {
-            col: str(self.df[col].dtype) for col in self.df.columns
-        }
-
-        null_stats = {
-            col: float(self.df[col].isnull().mean()) for col in self.df.columns
-        }
-
-        self.metadata = {
-            "dataset_id": str(uuid.uuid4()),
-            "dataset_name": self.dataset_name,
-            "source_path": self.source_path,
-            "created_on": datetime.now().isoformat(),
-            "record_count": len(self.df),
-            "column_count": len(self.df.columns),
-            "inferred_schema": inferred_schema,
-            "null_statistics": null_stats,
-            "quality_expectations": {}
-        }
-
-        print("✅ First-order metadata generated.")
-        return self.metadata
-
-    # -------------------------------------------------------------------------
-    # (2) Function: AI-assisted metadata augmentation
-    # -------------------------------------------------------------------------
-    def ai_assisted_augmentation(self):
-        """
-        Uses heuristic + AI-inspired rules to infer:
-        - potential primary keys
-        - datetime columns
-        - numerical/categorical types
-        - completeness/uniqueness thresholds
-        """
-        print("🧠 Running AI-assisted metadata augmentation...")
-
-        potential_keys = [
-            col for col in self.df.columns
-            if self.df[col].is_unique and not self.df[col].isnull().any()
-        ]
-
-        datetime_cols = [
-            col for col in self.df.columns
-            if pd.api.types.is_datetime64_any_dtype(self.df[col])
-            or self._is_datetime_like(self.df[col])
-        ]
-
-        num_cols = [
-            col for col in self.df.select_dtypes(include=[np.number]).columns
-        ]
-        cat_cols = [
-            col for col in self.df.select_dtypes(include=["object", "category"]).columns
-        ]
-
-        # Simple heuristic-based expectations
-        completeness_threshold = 0.98
-        uniqueness_threshold = 1.0 if potential_keys else 0.95
-
-        # Update metadata
-        self.metadata["ai_augmented"] = {
-            "potential_primary_keys": potential_keys,
-            "datetime_columns": datetime_cols,
-            "numerical_columns": num_cols,
-            "categorical_columns": cat_cols,
-            "suggested_quality_expectations": {
-                "completeness_threshold": completeness_threshold,
-                "uniqueness_threshold": uniqueness_threshold
+    def _save_kb(self):
+        with open(self.kb_path, "w") as f:
+            json.dump(self.kb, f, indent=4)
+    
+    # ------------------ First Order Metadata ------------------ #
+    def build_first_order_metadata(self, df: pd.DataFrame):
+        metadata = {}
+        for col in df.columns:
+            metadata[col] = {
+                "dtype": str(df[col].dtype),
+                "missing_percent": df[col].isna().mean() * 100,
+                "unique_values": df[col].nunique(),
+                "sample_values": df[col].dropna().unique()[:5].tolist()
             }
+        return metadata
+
+    # ------------------ AI Call ------------------ #
+    def _call_openrouter(self, prompt, url="https://openrouter.ai/api/v1/chat/completions"):
+        # url = "https://openrouter.ai/api/v1/chat/completions"
+        headers = {
+            "Authorization": f"Bearer {self.api_key}",
+            "Content-Type": "application/json"
+        }
+        payload = {
+            "model": self.model_name,
+            "messages": [{"role": "user", "content": prompt}]
         }
 
-        print("✨ Metadata augmented with AI-assisted inference.")
-        return self.metadata
+        for attempt in range(self.max_retries):
+            try:
+                response = requests.post(url, headers=headers, data=json.dumps(payload), timeout=30)
+                response.raise_for_status()
+                result = response.json()
+                return result["choices"][0]["message"]["content"].strip()
+            except Exception as e:
+                print(f"Attempt {attempt+1}/{self.max_retries}: {e}")
+                time.sleep(self.retry_delay)
+        # fallback if all retries fail
+        print(f"All retries failed for prompt. Returning None.")
+        return None
 
-    # -------------------------------------------------------------------------
-    # Helper function: Detect datetime-like strings
-    # -------------------------------------------------------------------------
-    def _is_datetime_like(self, series: pd.Series) -> bool:
+    # ------------------ Safe JSON Parsing ------------------ #
+    @staticmethod
+    def parse_json_safe(text):
+        if not text:
+            return None
         try:
-            pd.to_datetime(series.dropna().sample(min(5, len(series))), errors="raise")
-            return True
-        except Exception:
-            return False
+            return json.loads(text)
+        except:
+            # extract JSON object from text
+            match = re.search(r"\{.*\}", text, re.DOTALL)
+            if match:
+                try:
+                    return json.loads(match.group())
+                except:
+                    return None
+            return None
 
-    # -------------------------------------------------------------------------
-    # Save the metadata to a JSON file
-    # -------------------------------------------------------------------------
-    def save_metadata(self):
-        filename = f"{self.dataset_name}_metadata.json"
-        file_path = os.path.join(self.save_dir, filename)
-        with open(file_path, "w", encoding="utf-8") as f:
-            json.dump(self.metadata, f, indent=4)
-        print(f"💾 Metadata saved to {file_path}")
-        return file_path
+    # ------------------ AI Metadata Augmentation ------------------ #
+    def ai_augment_metadata(self, metadata):
+        enriched_metadata = {}
+
+        for col, info in metadata.items():
+            # Check KB first
+            if col in self.kb:
+                print(f"[KB HIT] Using stored metadata for '{col}'")
+                enriched_metadata[col] = {**info, **self.kb[col]}
+                continue
+
+            # Structured JSON prompt
+            prompt = f"""
+            infer the following as a valid JSON object **only** (no extra text):
+
+            - semantic_type
+            - possible_meaning
+            - expected_format
+            - potential_issues
+
+            Example output:
+            {{ 
+            "semantic_type": "currency",
+            "possible_meaning": "Total transaction amount",
+            "expected_format": "float",
+            "potential_issues": "Missing values or negative numbers"
+            }}
+            """
+            ai_text = self._call_openrouter(prompt)
+            enrichment = self.parse_json_safe(ai_text)
+
+            # fallback stub if AI fails
+            if enrichment is None:
+                print(f"[AI Warning] Could not parse response for '{col}', using stub")
+                enrichment = {
+                    "semantic_type": "unknown",
+                    "possible_meaning": f"Could not infer for {col}",
+                    "expected_format": "unknown",
+                    "potential_issues": "unknown"
+                }
+
+            enriched_metadata[col] = {**info, **enrichment}
+
+            # Store in KB
+            self.kb[col] = enrichment
+
+        # Save KB after all columns
+        self._save_kb()
+        return enriched_metadata
+
+    # ------------------ Feedback Integration ------------------ #
+    def update_feedback(self, column_name, corrected_metadata):
+        self.kb[column_name] = corrected_metadata
+        self._save_kb()
+        print(f"[Feedback Updated] KB updated for '{column_name}'.")
+
+    # ------------------ Save Metadata ------------------ #
+    def save_metadata(self, metadata, file_path="metadata.json"):
+        with open(file_path, "w") as f:
+            json.dump(metadata, f, indent=4)
+        print(f"Metadata saved to {file_path}")
