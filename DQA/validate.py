@@ -1,5 +1,6 @@
 import dask.dataframe as dd
 import re
+import pandas as pd
 
 def check_not_null(ddf, column):
     missing = ddf[column].isnull().sum().compute()

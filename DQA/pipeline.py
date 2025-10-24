@@ -1,7 +1,7 @@
 import json
-from src.extract import load_data_from_csv
-from src.validate import run_validations
-from src.report import generate_report
+from extract import load_data_from_csv
+from validate import run_validations
+from report import generate_report
 
 def main():
     # Load configuration
